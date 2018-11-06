@@ -7,7 +7,7 @@
 // register service worker
 if ('serviceWorker' in navigator) { // if service worker API is available
   window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/justFight/sw.js', {scope: '/justFight/'}).then(function(registration) {
+      navigator.serviceWorker.register('/levelgame/sw.js', {scope: '/levelgame/'}).then(function(registration) {
           console.log('ServiceWorker registration successful with scope: ', registration.scope);
       }, function(err) {
           console.log('ServiceWorker registration failed: ', err);
