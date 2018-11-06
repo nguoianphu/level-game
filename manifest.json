@@ -2,7 +2,7 @@
   "name": "Fight against Enemies",
   "short_name": "Just Fight",
   "description": "A Level Game built with Quintus.js",
-  "start_url": "/",
+  "start_url": "/levelgame/",
   "background_color": "#000000",
   "theme_color": "#000000",
   "display": "fullscreen",
