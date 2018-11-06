@@ -60,7 +60,7 @@ var filesToCache = [				 /* Files you wan to store in cache */
   '/levelgame/lib/quintus.js',
   '/levelgame/scripts/enemy.js',
   '/levelgame/scripts/game.js',
-  '/levelgame/scripts/player.js',
+  '/levelgame/scripts/player.js'
 ];
 
 
