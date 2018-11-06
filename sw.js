@@ -7,7 +7,7 @@
 // register service worker
 if ('serviceWorker' in navigator) { // if service worker API is available
   window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/sw.js', {scope: '/'}).then(function(registration) {
+      navigator.serviceWorker.register('/justFight/sw.js', {scope: '/justFight/'}).then(function(registration) {
           console.log('ServiceWorker registration successful with scope: ', registration.scope);
       }, function(err) {
           console.log('ServiceWorker registration failed: ', err);
@@ -19,6 +19,8 @@ var cacheName = 'levelGame-v2'; /* Name your cache  */
 var filesToCache = [				 /* Files you wan to store in cache */
   '/',
   '/index.html',
+  '/sw.js',
+  '/manifest.json',
   '/audio/coin.mp3',
   '/audio/coin.ogg',
   '/audio/jump.mp3',
