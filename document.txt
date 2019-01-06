@@ -12,8 +12,13 @@ sw.js
 
 Github
 
-  manifest.json: start_url 要加入 Repository name: '/rccar/'
+  * manifest.json: start_url 要加入 Repository name: 例如: '/rccar/'
 
-  sw.js: path_1: '/rccar/sw.js'
-         path_2: '/rccar/'
+  * sw.js: path_1: '/rccar/sw.js'
+           path_2: '/rccar/'
 
+           filestoCache = [
+            '/rccar/filename1',
+            '/rccar/filename2',
+            ......
+           ]

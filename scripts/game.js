@@ -1,6 +1,6 @@
 window.addEventListener("load",function() {
   var Q = window.Q = Quintus({development: true})
-    .include("Scenes, Sprites, 2D, Input, Touch, UI, TMX, Audio")
+    .include("Scenes, Sprites, 2D, Input, Anim, Touch, UI, TMX, Audio")
     .include("ActionPlatformerPlayer, ActionPlatformerEnemy")
     .setup({
       width: 480,   //to fit devices with a screne resolution of 1280 x 720 /4 

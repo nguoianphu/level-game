@@ -1,92 +1,62 @@
 /*
-	We only need to modify 2 places:
-		1. cacheName
-		2. filesToCache
+	We only need to modify cacheName 
+	Since we use 'cache with Network Update' strategy, we don't need to manually add files to be stored in cache, browser will do this for us! 
 */
 
+const cacheName = 'level-game-v1.0'; /* Name your cache  */
+const filesToCache = ['/index.html'] /* that's all, all of the rest files will be automatically installed in cache */
+
 // register service worker
-if ('serviceWorker' in navigator) { // if service worker API is available
-  window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/levelgame/sw.js', {scope: '/levelgame/'}).then(function(registration) {
+if ('serviceWorker' in navigator) { // || if (navigator.serviceWorker) {
+  window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js', {scope: '/'})
+        .then(registration => {
           console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }, function(err) {
+      }).catch(err => {
           console.log('ServiceWorker registration failed: ', err);
       });
   });
-}
-
-var cacheName = 'levelGame-v2'; /* Name your cache  */
-var filesToCache = [				 /* Files you wan to store in cache */
-  '/levelgame/',
-  '/levelgame/index.html',
-  '/levelgame/sw.js',
-  '/levelgame/manifest.json',
-  '/levelgame/audio/coin.mp3',
-  '/levelgame/audio/coin.ogg',
-  '/levelgame/audio/jump.mp3',
-  '/levelgame/audio/jump.ogg',
-  '/levelgame/audio/kill-enemy.mp3',
-  '/levelgame/audio/kill-enemy.ogg',
-  '/levelgame/data/level1.tmx',
-  '/levelgame/data/sprites.json',
-  '/levelgame/images/icons/icon-72x72.png',
-  '/levelgame/images/icons/icon-96x96.png',
-  '/levelgame/images/icons/icon-128x128.png',
-  '/levelgame/images/icons/icon-144x144.png',
-  '/levelgame/images/icons/icon-152x152.png',
-  '/levelgame/images/icons/icon-192x192.png',
-  '/levelgame/images/icons/icon-384x384.png',
-  '/levelgame/images/icons/icon-512x512.png',
-  '/levelgame/images/standalone images/bee.png',
-  '/levelgame/images/standalone images/blue-alien.png',
-  '/levelgame/images/standalone images/bullet.png',
-  '/levelgame/images/standalone images/ghost.png',
-  '/levelgame/images/standalone images/gray-alien.png',
-  '/levelgame/images/standalone images/player.png',
-  '/levelgame/images/standalone images/power.png',
-  '/levelgame/images/standalone images/red-alien.png',
-  '/levelgame/images/standalone images/yellow-alien.png',
-  '/levelgame/images/sprites.png',
-  '/levelgame/images/spritesheet.png',
-  '/levelgame/lib/quintus_2d.js',
-  '/levelgame/lib/quintus_anim.js',
-  '/levelgame/lib/quintus_audio.js',
-  '/levelgame/lib/quintus_input.js',
-  '/levelgame/lib/quintus_scenes.js',
-  '/levelgame/lib/quintus_sprites.js',
-  '/levelgame/lib/quintus_tmx.js',
-  '/levelgame/lib/quintus_touch.js',
-  '/levelgame/lib/quintus_ui.js',
-  '/levelgame/lib/quintus.js',
-  '/levelgame/scripts/enemy.js',
-  '/levelgame/scripts/game.js',
-  '/levelgame/scripts/player.js'
-];
-
+}  
+  
+// delete previous caches
+self.addEventListener('activate', e => {
+  let cachecleaned = caches.keys().then(keys => {
+    keys.forEach(key => {
+      if(key !== `${cacheName}`) return caches.delete(key)
+    })
+  })
+})
 
 // install service worker 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', e => {
   console.log('sw install');
-  event.waitUntil(
-    caches.open(cacheName).then(function(cache) {
+  e.waitUntil(
+    caches.open(`${cacheName}`).then(function(cache) {
       console.log('sw caching files');
       return cache.addAll(filesToCache);
-    }).catch(function(err) {
+    }).catch(err => {
       console.log(err);
     })
   );
 });
 
-// use cached assets: fetching service worker
-self.addEventListener('fetch', (event) => {
+// fetch assets from cache or network
+self.addEventListener('fetch', e => {
   console.log('sw fetch');
-  console.log(event.request.url);
-  event.respondWith(
-    caches.match(event.request).then(function(response) {
-      return response || fetch(event.request);
-    }).catch(function (error) {
-      console.log(error);
-    })
-  );
-});
+  console.log(e.request.url);
 
+  // Cache with Network Update 
+  e.respondWith(
+    caches.open(`${cacheName}`).then(cache => {
+      return cache.match(e.request).then(res => {
+        let updateRes = fetch(e.request).then(newRes => {
+          cache.put(e.request, newRes.clone())
+          return newRes
+        })
+        return res || updateRes
+      })
+    })
+  )
+});
+  
+  
